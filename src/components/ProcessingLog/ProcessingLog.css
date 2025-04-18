@@ -1,0 +1,68 @@
+.processing-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.log-container {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 1rem;
+  height: 300px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #1e1e1e;
+}
+
+/* Стили для скроллбара WebKit (Chrome, Safari, etc.) */
+.log-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 4px;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 4px;
+  border: 2px solid #1e1e1e;
+}
+
+.log-content {
+  margin: 0;
+  color: #fff;
+  font-family: monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.processing-progress-container {
+  width: 100%;
+  height: 12px;
+  background-color: #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.processing-progress-bar {
+  height: 100%;
+  background-color: #6c5ce7;
+  transition: width 0.3s ease;
+}
+
+.processing-progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+} 
