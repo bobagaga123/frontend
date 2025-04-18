@@ -9,8 +9,8 @@ const teamMembers = [
     image: '/avatars/member1.jpg',
   },
   {
-    name: 'Герман Штуккерт',
-    role: '123',
+    name: 'Герман',
+    role: 'Роль 2',
     description: 'Описание 2',
     image: '/avatars/member2.jpg',
   },

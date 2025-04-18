@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import UploadTable from '../components/UploadTable/UploadTable';
 import UploadTabs from '../components/UploadTabs/UploadTabs';
 import ProcessingLog from '../components/ProcessingLog/ProcessingLog';
+import ResultView from '../components/ResultView/ResultView';
 import useWebSocket from '../hooks/useWebSocket';
+import useWebSocketHandler from '../hooks/useWebSocketHandler';
 import './UploadPage.css';
 
 const WS_URL = import.meta.env.VITE_WS_URL;
@@ -12,26 +14,21 @@ const UploadPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [log, setLog] = useState('');
   const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState(null);
 
-  const handleWebSocketMessage = useCallback((data) => {
-    if (data.type === 'log') {
-      setLog(prevLog => prevLog + data.message + '\n');
-    } else if (data.type === 'progress') {
-      setProgress(data.value);
-    } else if (data.type === 'complete') {
-      setLog(prevLog => prevLog + 'Processing completed!\n');
-    } else if (data.type === 'error') {
-      setLog(prevLog => prevLog + `Error: ${data.message}\n`);
-      setIsProcessing(false);
-    }
-  }, []);
+  const handleWebSocketMessage = useWebSocketHandler(setLog, setProgress, setResult);
+  const { connect, sendMessage } = useWebSocket(WS_URL, handleWebSocketMessage);
 
-  const { connect } = useWebSocket(WS_URL, handleWebSocketMessage);
-
-  const handleUpload = (file) => {
+  const handleUpload = (files, params) => {
     setIsProcessing(true);
     setLog('Starting process...\n');
     connect();
+    
+    sendMessage({
+      type: 'start_processing',
+      files: activeTab === 'zip' ? [files[0].name] : files.map(f => f.name),
+      params: params
+    });
   };
 
   return (
@@ -39,10 +36,13 @@ const UploadPage = () => {
       {!isProcessing ? (
         <>
           <UploadTabs activeTab={activeTab} onTabChange={setActiveTab} />
-          <UploadTable onUpload={handleUpload} />
+          <UploadTable onUpload={handleUpload} activeTab={activeTab} />
         </>
       ) : (
-        <ProcessingLog log={log} progress={progress} />
+        <>
+          <ProcessingLog log={log} progress={progress} />
+          {result && <ResultView result={result} />}
+        </>
       )}
     </div>
   );

@@ -13,7 +13,6 @@ const UploadTabs = ({ activeTab, onTabChange }) => {
       <button 
         className={`tab ${activeTab === 'files' ? 'active' : ''}`}
         onClick={() => onTabChange('files')}
-        disabled
       >
         Много файлов
       </button>

@@ -1,55 +1,51 @@
 .upload-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .drop-zone {
-  border: 2px dashed #6c5ce7;
+  border: 2px dashed #ccc;
   border-radius: 8px;
-  padding: 3rem;
+  padding: 40px;
   text-align: center;
-  background-color: #f8f9fa;
   cursor: pointer;
-  position: relative;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
   min-height: 200px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  transition: all 0.3s ease;
 }
 
 .drop-zone.dragging {
-  background-color: #eee6ff;
-  border-color: #5b4bc4;
-  transform: scale(1.02);
+  border-color: #6C63FF;
+  background-color: rgba(108, 99, 255, 0.1);
 }
 
 .drop-zone.has-file {
-  border-style: solid;
   cursor: default;
+  padding: 20px;
 }
 
 .drop-text {
-  color: #666;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
+  color: #666;
 }
 
 .upload-icon {
-  font-size: 2rem;
+  font-size: 48px;
+  margin-bottom: 10px;
 }
 
 .file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
   display: none;
 }
 
@@ -57,24 +53,23 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 10px;
 }
 
 .file-card {
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 4px;
 }
 
 .file-info {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 10px;
 }
 
 .file-name {
@@ -84,82 +79,127 @@
 
 .file-size {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .file-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .action-button {
   background: none;
   border: none;
-  padding: 0.5rem;
   cursor: pointer;
+  padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
 .action-button:hover {
-  background-color: #f5f5f5;
-}
-
-.action-button.edit:hover {
-  background-color: #e3f2fd;
-}
-
-.action-button.delete:hover {
-  background-color: #ffebee;
+  background-color: #f0f0f0;
 }
 
 .progress-bar-container {
   width: 100%;
-  height: 8px;
-  background-color: #e9ecef;
-  border-radius: 4px;
-  overflow: hidden;
+  height: 4px;
+  background-color: #f0f0f0;
+  border-radius: 2px;
+  margin-top: 10px;
   position: relative;
-  margin-top: 1rem;
 }
 
 .progress-bar {
   height: 100%;
-  background-color: #6c5ce7;
+  background-color: #6C63FF;
+  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #333;
-  font-size: 0.8rem;
-  font-weight: bold;
+  right: 0;
+  top: -20px;
+  font-size: 12px;
+  color: #666;
 }
 
 .submit-button {
-  padding: 1rem 2rem;
-  background-color: #6c5ce7;
+  background-color: #6C63FF;
   color: white;
   border: none;
+  padding: 12px 24px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 16px;
   transition: all 0.3s ease;
-  align-self: flex-end;
+  align-self: center;
 }
 
 .submit-button:hover:not(:disabled) {
-  background-color: #5b4bc4;
-  transform: translateY(-1px);
+  background-color: #5B54D6;
 }
 
 .submit-button:disabled {
-  background-color: #a8a8a8;
+  background-color: #ccc;
   cursor: not-allowed;
+}
+
+.add-more-button {
+  background-color: transparent;
+  border: 1px solid #6C63FF;
+  color: #6C63FF;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.add-more-button:hover {
+  background-color: rgba(108, 99, 255, 0.1);
+}
+
+.number-inputs {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-group label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.input-group input {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #6C63FF;
+  box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+}
+
+.input-group input::-webkit-inner-spin-button,
+.input-group input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-group input[type=number] {
+  -moz-appearance: textfield;
 } 
