@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import JSZip from 'jszip';
+import { uploadService } from '../../api/uploadService';
 import './UploadTable.css';
 
 const UploadTable = ({ onUpload, activeTab }) => {
@@ -7,8 +8,10 @@ const UploadTable = ({ onUpload, activeTab }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [bValue, setBValue] = useState('');
-  const [mValue, setMValue] = useState('');
+  const [aValue, setAValue] = useState('1');
+  const [bValue, setBValue] = useState('1');
+  const [cValue, setCValue] = useState('1');
+  const [dValue, setDValue] = useState('1');
   const fileInputRef = useRef(null);
 
   const isZipMode = activeTab === 'zip';
@@ -113,44 +116,36 @@ const UploadTable = ({ onUpload, activeTab }) => {
   };
 
   const handleSubmit = async () => {
-    if (!bValue || !mValue || files.length === 0) {
-      alert('Пожалуйста, заполните все поля и выберите файлы');
+    if (files.length === 0) {
+      alert('Пожалуйста, выберите файлы');
       return;
     }
 
     try {
-      const formData = new FormData();
+      let zipFile;
       
       if (isZipMode) {
-        formData.append('file', files[0]);
+        zipFile = files[0];
       } else {
         setIsUploading(true);
-        // Создаем zip из выбранных файлов
-        const zipFile = await createZipFromFiles(files);
-        formData.append('file', zipFile);
+        zipFile = await createZipFromFiles(files);
       }
 
-      const response = await fetch(`http://127.0.0.1:8000/upload?b=${bValue}&m=${mValue}`, {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-        },
-        body: formData
-      });
+      const params = {
+        a: parseInt(aValue || '1'),
+        b: parseInt(bValue || '1'),
+        c: parseInt(cValue || '1'),
+        d: parseInt(dValue || '1')
+      };
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await uploadService.uploadFile(zipFile, params);
       console.log('Успешно загружено:', data);
       alert('Файлы успешно загружены!');
       
       if (isZipMode) {
-        onUpload && onUpload(files, { b: parseInt(bValue), m: parseInt(mValue) });
+        onUpload && onUpload(files, params);
       } else {
-        // Передаем созданный zip-файл
-        onUpload && onUpload([{ name: 'files.zip' }], { b: parseInt(bValue), m: parseInt(mValue) });
+        onUpload && onUpload([{ name: 'files.zip' }], params);
       }
       
       setIsUploading(false);
@@ -183,10 +178,20 @@ const UploadTable = ({ onUpload, activeTab }) => {
   const handleNumberInput = (e, type) => {
     const value = e.target.value;
     if (value === '' || /^\d+$/.test(value)) {
-      if (type === 'b') {
-        setBValue(value);
-      } else if (type === 'm') {
-        setMValue(value);
+      const setValue = value === '' ? '1' : value; // Устанавливаем 1 если поле пустое
+      switch(type) {
+        case 'a':
+          setAValue(setValue);
+          break;
+        case 'b':
+          setBValue(setValue);
+          break;
+        case 'c':
+          setCValue(setValue);
+          break;
+        case 'd':
+          setDValue(setValue);
+          break;
       }
     }
   };
@@ -202,23 +207,47 @@ const UploadTable = ({ onUpload, activeTab }) => {
     <div className="upload-container">
       <div className="number-inputs">
         <div className="input-group">
-          <label htmlFor="bValue">b:</label>
+          <label htmlFor="aValue">A:</label>
+          <input
+            type="number"
+            id="aValue"
+            value={aValue}
+            onChange={(e) => handleNumberInput(e, 'a')}
+            placeholder="1"
+            min="1"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="bValue">B:</label>
           <input
             type="number"
             id="bValue"
             value={bValue}
             onChange={(e) => handleNumberInput(e, 'b')}
-            placeholder="Введите b"
+            placeholder="1"
+            min="1"
           />
         </div>
         <div className="input-group">
-          <label htmlFor="mValue">m:</label>
+          <label htmlFor="cValue">C:</label>
           <input
             type="number"
-            id="mValue"
-            value={mValue}
-            onChange={(e) => handleNumberInput(e, 'm')}
-            placeholder="Введите m"
+            id="cValue"
+            value={cValue}
+            onChange={(e) => handleNumberInput(e, 'c')}
+            placeholder="1"
+            min="1"
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="dValue">D:</label>
+          <input
+            type="number"
+            id="dValue"
+            value={dValue}
+            onChange={(e) => handleNumberInput(e, 'd')}
+            placeholder="1"
+            min="1"
           />
         </div>
       </div>
@@ -293,7 +322,7 @@ const UploadTable = ({ onUpload, activeTab }) => {
 
       <button 
         className="submit-button"
-        disabled={files.length === 0 || isUploading || !bValue || !mValue}
+        disabled={files.length === 0 || isUploading}
         onClick={handleSubmit}
       >
         {isUploading ? 'Создание архива...' : 'Отправить'}
